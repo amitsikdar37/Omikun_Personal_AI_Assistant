@@ -1,0 +1,18 @@
+# Llama runtime (local)
+llama-cpp-python>=0.2.0           # Python bindings for llama.cpp to run Llama 3.1 8B locally [web:67][web:65]
+
+# Speech-to-Text (local, fast)
+faster-whisper>=1.0.0             # High-speed Whisper via CTranslate2, no FFmpeg required for basic use [web:59][web:60]
+
+# Audio capture + utilities
+sounddevice>=0.4.6                # Record from microphone with Python [web:61]
+numpy>=1.24.0                     # Audio arrays and general numerics [web:61]
+
+# Optional: offline TTS (if you also want the bot to speak back)
+pyttsx3>=2.90                     # Simple offline text-to-speech (Windows/macOS/Linux) [web:34]
+
+requests>=2.31.0
+
+keyboard
+
+selenium
