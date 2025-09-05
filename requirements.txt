@@ -16,3 +16,5 @@ requests>=2.31.0
 keyboard
 
 selenium
+
+webdriver-manager
