@@ -12,6 +12,8 @@ from src.llm.ollama_client import OllamaClient
 from src.tools.whatsapp_web import WhatsAppWeb
 from threading import Thread, Event
 
+from src.config.profile_manager import load_profile, profile_to_text
+
 def build_system(memory_summary):
     base = "You are Omikun, a concise and friendly AI assistant. If Memory includes the user's name, address them naturally by name."
     if memory_summary:
@@ -30,6 +32,9 @@ class JarvisAssistant:
         self.whatsapp = WhatsAppWeb()
         self.auto_replying = False
         self.stop_event = Event()
+        self.profile_data = load_profile()
+        self.profile_text = profile_to_text(self.profile_data)
+
         
         # Audio settings
         self.sample_rate = 16000
@@ -186,9 +191,12 @@ class JarvisAssistant:
         # Provide sender and message text to your LLM
         def callback(sender, msg):
             prompt = (
-                f"Sender: {sender}\n"
+                f"You are Omikun, {self.profile_data['name']}'s friendly AI assistant. "
+                f"You speak in your own persona and refer to{self.profile_data['name']}  in the third person. "
+                f"Here is {self.profile_data['name']}'s profile:\n{self.profile_text}\n\n"
+                f"WhatsApp Sender: {sender}\n"
                 f"Message: {msg}\n"
-                "Reply in a friendly, WhatsApp-style chat, keeping it short and human:"
+                f"Reply as Omikun, WhatsApp-style, always making it clear you are an AI assistant answering for {self.profile_data['name']}."
             )
             return self.llama.chat(prompt)
         return callback

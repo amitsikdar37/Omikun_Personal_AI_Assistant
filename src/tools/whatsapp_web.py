@@ -161,7 +161,29 @@ class WhatsAppWeb:
                 reply = ai_callback(sender, msg)
                 self.send_message(reply)
                 recent_ids.add(msg_id)
-            time.sleep(5)
+
+            try:
+            #chat_name = "Unknown"
+                try:
+                    header_span = self.driver.find_element(By.CSS_SELECTOR, "header span[title]")
+                    chat_name = header_span.get_attribute("title")
+                except Exception:
+                    pass
+                last_msgs = self.driver.find_elements(By.CSS_SELECTOR, "div.message-in")
+                if last_msgs:
+                    last_elem = last_msgs[-1]
+                    last_msg = last_elem.text.strip()
+                    # Use the element's unique id if present, else fallback to (name, text)
+                    unique_part = last_elem.get_attribute("data-id") or last_msg
+                    msg_id = (chat_name, unique_part)
+                    if msg_id not in recent_ids:
+                        print(f"[Realtime Open Chat] Got new message from {chat_name}: '{last_msg}'")
+                        reply = ai_callback(chat_name, last_msg)
+                        self.send_message(reply)
+                        recent_ids.add(msg_id)
+            except Exception as e:
+                print("Realtime open chat error:", e)
+            time.sleep(2)
         print("Auto-reply mode off.")
 
     def close(self):
